@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡¡¡Aniversario!!!</title>
+	<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffeef2;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      position: relative;
+    }
+
+    .envelope {
+      width: 550px;
+      height: 975px;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .front, .back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 15px;
+      backface-visibility: hidden;
+      transition: transform 1s ease;
+    }
+
+    .front {
+      background: #ffccd5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #b30000;
+      transform-origin: top;
+      z-index: 3;
+      cursor: pointer;
+    }
+
+    .front.open {
+      transform: rotateX(-180deg);
+    }
+
+#hearts-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* detrás de la tarjeta */
+}
+
+    .back {
+      background: #fff;
+      padding: 50px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      transform: rotateX(0deg);
+      z-index: 2;
+      overflow-y: auto;
+    }
+
+    .heart {
+      width: 100px;
+      height: 90px;
+      background-color: red;
+      position: relative;
+      transform: rotate(-45deg);
+      margin: 0 auto;
+      animation: heartbeat 1s infinite, pastelColor 8s infinite alternate;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 100px;
+      height: 90px;
+      background-color: inherit;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: rotate(-45deg) scale(1); }
+      50% { transform: rotate(-45deg) scale(1.1); }
+    }
+
+	 @keyframes heartbeat2 {
+      0%, 100% { transform:  scale(1); }
+      50% { transform:  scale(1.1); }
+    }
+
+    @keyframes pastelColor {
+      0% { background-color: #f8b8c6; }
+      20% { background-color: #b8e0f8; }
+      40% { background-color: #c8f8e0; }
+      60% { background-color: #f8e0b8; }
+      80% { background-color: #f8d3f8; }
+      100% { background-color: #fff0b3; }
+    }
+
+    .floating-heart {
+      width: 40px;
+      height: 36px;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: rotate(-45deg);
+      animation: floatUp 6s linear infinite, pastelColor 8s infinite alternate;
+      pointer-events: auto;
+	z-index: 1;
+    }
+
+    .floating-heart::before,
+    .floating-heart::after {
+      content: "";
+      width: 40px;
+      height: 36px;
+      background-color: inherit;
+      border-radius: 50%;
+      position: absolute;
+	z-index: 1;
+    }
+    .floating-heart::before {
+      top: -20px;
+      left: 0;
+	z-index: 1;
+    }
+    .floating-heart::after {
+      left: 20px;
+      top: 0;
+	z-index: 1;
+    }
+
+    @keyframes floatUp {
+       0% {
+    transform: translate(0, 0) scale(1); rotate(-45deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-20px, -150px) scale(1.1); rotate(-45deg);
+  }
+  50% {
+    transform: translate(20px, -300px) scale(1.2); rotate(-45deg);
+  }
+  75% {
+    transform: translate(-15px, -600px) scale(1.15); rotate(-45deg);
+  }
+  100% {
+    transform: translate(0, -900px) scale(1.1); rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: gold;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: explode 0.8s ease-out forwards;
+    }
+
+    @keyframes explode {
+      to {
+        transform: translate(var(--x), var(--y)) scale(4);
+        opacity: 0;
+      }
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #b30000;
+      line-height: 1.4;
+    }
+
+    .counter {
+  margin-top: 15px;
+  font-size: 20px;
+  color: #B3FFFF;
+  font-weight: bold;
+  animation: glowPulse 2s infinite;
+}
+
+    @keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 5px #ffccd5, 0 0 10px #ff99aa, 0 0 15px #ff6688;
+  }
+  50% {
+    text-shadow: 0 0 10px #ff99aa, 0 0 20px #ff6688, 0 0 30px #ff3366;
+  }
+  100% {
+    text-shadow: 0 0 5px #ffccd5, 0 0 10px #ff99aa, 0 0 15px #ff6688;
+  }
+}
+
+    .counter2 {
+  margin-top: 15px;
+  font-size: 20px;
+  color: #FFFFFF;
+  font-weight: bold;
+  animation: glowPulse2 2s infinite;
+}
+
+    @keyframes glowPulse2 {
+  0% {
+    text-shadow: 0 0 5px #ffccd5, 0 0 10px #ff99aa, 0 0 15px #ff6688;
+  }
+  50% {
+    text-shadow: 0 0 10px #ff99aa, 0 0 20px #ff6688, 0 0 30px #ff3366;
+  }
+  100% {
+    text-shadow: 0 0 5px #ffccd5, 0 0 10px #ff99aa, 0 0 15px #ff6688;
+  }
+}
+    
+    .carousel {
+      margin-top: 20px;
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .carousel-slide {
+      display: flex;
+      transition: transform 0.5s ease;
+      width: 100%;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .carousel-item img {
+      width: 260px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
+    }
+
+    .photo-frame {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #fff8f0;
+      border: 2px solid #ffccd5;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #a00000;
+      text-align: center;
+      width: 260px;
+
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .carousel-controls button {
+      background-color: #ffccd5;
+      border: none;
+      color: #b30000;
+      font-size: 40px;
+      padding: 5px 15px;
+      border-radius: 100%;
+      cursor: pointer;
+	z-index: 100;
+	animation: heartbeat2 1.2s infinite;
+	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    #music-btn {
+	display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #ffccd5;
+      color: #b30000;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 100;
+      animation: heartbeat 1.2s infinite;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      align-items: center;
+      justify-content: center;
+    }
+
+    #music-icon {
+      font-size: 28px;
+      font-weight: bold;
+    }
+	#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+#loveOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+#loveText {
+  font-size: 64px;
+  color: #ff66cc;
+  font-family: 'Brush Script MT', cursive;
+  animation: neonFlash 1.2s infinite alternate;
+  text-shadow: 0 0 10px #fff, 0 0 20px #ff66cc, 0 0 40px #ff33aa;
+  margin-bottom: 50px;
+}
+
+@keyframes neonFlash {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+#sparkContainer {
+  position: relative;
+  width: 20px;
+  height: 200px;
+}
+
+.spark {
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background: radial-gradient(circle, #fff, #ffcc99);
+  animation: shoot 1s ease-out forwards;
+  opacity: 0.8;
+  border-radius: 50%;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+  </style>
+</head>
+<body>
+<div id="hearts-container"></div>
+<div class="envelope">
+  <div class="front" onclick="openCard()">💌¡Feliz Aniversario mi amor!💌</div>
+  <div class="back">
+    <div class="heart"></div>
+    <div class="message">
+      Un año juntos y primero Dios nos dará muchos mas años juntos, eres lo mas preciado de mi viida y quiero que siempre estés en ella ❤️
+    </div>
+
+    <div class="carousel" id="carousel">
+      <div class="carousel-slide" id="carouselSlide">
+        <div class="carousel-item">
+	<div class="photo-frame">Cuando fuimos al Jardin Borda🥰<br><small>06/Julio/2024</small></div><br>
+          <img src="Recursos/1.jpg" alt="Jardin Borda">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Nuestro Septiembre en Xochitepec😘<br><small>15/Septiembre/2024</small></div><br>
+          <img src="Recursos/22.jpg" alt="Xochi Septiembre">
+        </div>
+        <div class="carousel-item">
+	<div class="photo-frame">Nuestra aventura en Tepoztlán 😍<br><small>20/Octubre/2024</small></div><br>
+          <img src="Recursos/2.jpg" alt="Tepoz">
+        </div>
+       <div class="carousel-item">
+	<div class="photo-frame">Jardines de México fue mágico a tu lado ❤️<br><small>02/Noviembre/2024</small></div><br>
+          <img src="Recursos/3.jpg" alt="Jardines">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Nuestra primer navidad juntos 🎄⛄<br><small>15/Diciembre/2024</small></div><br>
+          <img src="Recursos/5.jpg" alt="Navidad">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Nuestro primer concierto, ¡Fue lo mas increible! 🎶🎶<br><small>25/Enero/2025</small></div><br>
+          <img src="Recursos/7.jpg" alt="Concierto">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">La villita contigo amor de mi vida ⛪😇<br><small>26/Enero/2025</small></div><br>
+          <img src="Recursos/6.jpg" alt="Villita">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Dia de San Valentín y siempre muy enamorado de ti ❤️<br><small>09/Febrero/2025</small></div><br>
+          <img src="Recursos/8.jpg" alt="Valentin">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Domingo de ramos con la familia 🌿<br><small>13/Abril/2025</small></div><br>
+          <img src="Recursos/10.jpg" alt="Ramos">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Semana santa muy especial y perfecta 🕯️<br><small>20/Abril/2025</small></div><br>
+          <img src="Recursos/11.jpg" alt="Semana Santa">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Primera vez en los manantiales con el amor de mi vida 🏊<br><small>31/Mayo/2025</small></div><br>
+          <img src="Recursos/12.jpg" alt="Manantiales">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">El mejor cumpleaños de mi vida y mi mejor regalo que es tenerte en mi vida 🎂<br>	<small>15/Junio/2025</small></div><br>
+          <img src="Recursos/13.jpg" alt="Cumple">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Y muchas aventuras más que hemos vivido 🗺️<br></div><br>
+          <img src="Recursos/4.jpg" alt="Hermosa">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Y las aventuras que nos hacen falta por vivir ✈️<br></div><br>
+          <img src="Recursos/20.jpg" alt="Preciosa">
+        </div>
+	<div class="carousel-item">
+	<div class="photo-frame">Mi meta en la vida es siempre hacerte feliz y mantener esta hermosa sonrisa 💕<br></div><br>
+          <img src="Recursos/21.jpg" alt="La mejor">
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button onclick="nextSlide()">></button><br>
+      </div>
+	<br>
+</div>
+
+<div class="counter">
+      Días desde que nos conocimos:
+    </div>
+
+ <div class="counter" id="dayCounter">❤️</div>
+     <div class="counter2">
+      <br>Dias que nos quedan juntos: ♾️ <br>
+    </div>
+  </div>
+</div>
+
+<div id="loveOverlay">
+  <span id="loveText">❤️ Te amo mucho ❤️</span>
+  <div id="sparkContainer"></div>
+</div>
+
+<audio id="bg-music" loop>
+  <source src="Recursos/1.mp3" type="audio/mpeg">
+</audio>
+<button id="music-btn" onclick="toggleMusic()">
+  <span id="music-icon">⏸</span>
+</button>
+
+<script>
+const maxFloatingHearts = 50;
+let currentHearts = 0;
+  const front = document.querySelector('.front');
+  const back = document.querySelector('.back');
+  const audio = document.getElementById('bg-music');
+
+  function openCard() {
+    front.classList.add('open');
+    back.classList.add('open');
+    audio.play();
+
+    if (!window.heartsStarted) {
+      window.heartsStarted = true;
+      setInterval(createFloating, 400);
+    }
+	document.getElementById('music-btn').style.display = 'flex';
+	lanzarFuegosArtificiales();
+  }
+
+  function toggleMusic() {
+    const icon = document.getElementById('music-icon');
+    if (audio.paused) {
+      audio.play();
+      icon.textContent = '⏸';
+    } else {
+      audio.pause();
+      icon.textContent = '▶';
+    }
+  }
+
+  const startDate = new Date(2024, 5, 30);
+	startDate.setHours(16, 00, 0, 0); // 10:30:00 AM
+  function updateCounter() {
+  const now = new Date();
+  const diff = now - startDate;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById('dayCounter').textContent =
+    `${days} días, ${hours}h ${minutes}m ${seconds}s`;
+}
+
+  updateCounter();
+	setInterval(updateCounter, 1000);
+
+
+  let currentIndex = 0;
+  const slide = document.getElementById('carouselSlide');
+  const totalItems = slide.children.length;
+	let loveOverlayTimeout;
+
+  function showSlide(index) {
+    slide.style.transform = `translateX(-${index * 100}%)`;
+	const loveOverlay = document.getElementById('loveOverlay');
+  	if (index === totalItems - 1) {
+    loveOverlay.style.opacity = '1';
+window.photoConfettiLaunched = true;
+    lanzarFuegosArtificiales();
+
+    clearTimeout(loveOverlayTimeout); // limpia tiempo anterior si existe
+    loveOverlayTimeout = setTimeout(() => {
+      loveOverlay.style.opacity = '0';
+    }, 5000); // desaparece después de 5 segundos
+  } else {
+    loveOverlay.style.opacity = '0';
+    clearTimeout(loveOverlayTimeout);
+  }
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalItems;
+    showSlide(currentIndex);
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    showSlide(currentIndex);
+  }
+
+function createFloating() {
+  if (currentHearts >= maxFloatingHearts) return;
+
+  const heart = document.createElement('div');
+  heart.classList.add('floating-heart');
+  heart.style.left = Math.random() * 105 + 'vw';
+  heart.style.bottom = '0px';
+
+  heart.addEventListener('click', (e) => {
+    e.stopPropagation();
+    explodeAt(e.clientX, e.clientY);
+    heart.remove();
+    currentHearts--;
+  });
+
+  heart.addEventListener('animationend', () => {
+    heart.remove();
+    currentHearts--;
+  });
+
+  document.getElementById('hearts-container').appendChild(heart);
+  currentHearts++;
+}
+
+  function explodeAt(x, y) {
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = `${x}px`;
+      p.style.top = `${y}px`;
+      p.style.setProperty('--x', `${(Math.random() - 0.5) * 200}px`);
+      p.style.setProperty('--y', `${(Math.random() - 0.5) * 200}px`);
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 800);
+    }
+  }
+function startConfettiExplosion() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  const colors = ['#ffc0cb', '#ffb6c1', '#ff69b4', '#ff99cc'];
+  const particles = [];
+
+  for (let i = 0; i < 120; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 10 + 4;
+    const depth = Math.random(); // profundidad (0 = lejano, 1 = cercano)
+
+    particles.push({
+      x: centerX,
+      y: centerY,
+      vx: Math.cos(angle) * speed * (1 + depth),
+      vy: Math.sin(angle) * speed * (1 + depth),
+      size: (1 - depth) * 10 + 4, // más grande si más cercano
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 20,
+      alpha: 1,
+      decay: 0.015 + Math.random() * 0.015,
+      depth
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+
+      // efecto de 3D con sombra y escala
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = 'rgba(0,0,0,0.1)';
+      ctx.shadowBlur = 4 * p.depth;
+      ctx.fillRect(
+        -p.size / 2,
+        -p.size / 8,
+        p.size,
+        p.size / (2 + p.depth * 1.5) // tiras más delgadas si más lejanas
+      );
+
+      ctx.restore();
+    });
+  }
+
+  function update() {
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.rotationSpeed;
+      p.alpha -= p.decay;
+    });
+  }
+
+  function animate() {
+    draw();
+    update();
+
+    const alive = particles.some(p => p.alpha > 0);
+    if (alive) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  animate();
+}
+
+	function lanzarFuegosArtificiales() {
+ 		 for (let i = 0; i < 2; i++) {
+    		setTimeout(() => {
+     		 lanzarExplosionCorazon();
+    		}, i * 800);
+  	}
+}
+	
+	function lanzarExplosionCorazon() {
+  const colores = generarColoresRosa();
+  const centerX = 0.5;
+  const centerY = 0.5;
+  const scale = 0.025; // Ajusta tamaño del corazón
+  const steps = 100;
+
+  for (let i = 0; i < steps; i++) {
+    const t = Math.PI * 2 * (i / steps);
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+    const xNorm = centerX + x * scale;
+    const yNorm = centerY - y * scale;
+
+    confetti({
+      particleCount: 2,
+      startVelocity: 30,
+      spread: 10,
+      origin: { x: xNorm, y: yNorm },
+      colors: colores,
+      scalar: 1.2,
+      shapes: ['circle']
+    });
+  }
+}
+
+
+
+	function generarColoresRosa() {
+  	return ['#ffc0cb', '#ff69b4', '#ff1493', '#db7093', '#ffb6c1'];
+	}
+
+function startSparkEffect() {
+  const container = document.getElementById('sparkContainer');
+
+  const sparkInterval = setInterval(() => {
+    for (let i = 0; i < 5; i++) {
+      const spark = document.createElement('div');
+      spark.classList.add('spark');
+      spark.style.left = `${Math.random() * 20 - 10}px`;
+      spark.style.top = '180px';
+      spark.style.transform = `rotate(${Math.random() * 360}deg)`;
+      container.appendChild(spark);
+
+      setTimeout(() => {
+        spark.remove();
+      }, 1000);
+    }
+  }, 100);
+
+  // Detener después de 6 segundos
+  setTimeout(() => clearInterval(sparkInterval), 6000);
+}
+
+
+</script>
+<canvas id="confetti-canvas"></canvas>
+</body>
+</html>
