@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>¡¡¡Aniversario!!!</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0;}
 
-    body {
+   html, body {
       margin: 0;
       padding: 0;
       background: #ffeef2;
       font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -23,8 +25,10 @@
     }
 
     .envelope {
-      width: 550px;
-      height: 975px;
+      width: 55px;
+	max-width: 550px;
+      height: 97px;
+	max-height: 975px;
       position: relative;
       transform-style: preserve-3d;
     }
@@ -76,8 +80,10 @@
     }
 
     .heart {
-      width: 100px;
-      height: 90px;
+      width: 10px;
+	     max-width: 100px;
+      height: 9px;
+	    max-height: 90px;
       background-color: red;
       position: relative;
       transform: rotate(-45deg);
@@ -88,20 +94,20 @@
     .heart::before,
     .heart::after {
       content: "";
-      width: 100px;
-      height: 90px;
+      width: 100%;
+      height: 100%;
       background-color: inherit;
       border-radius: 50%;
       position: absolute;
     }
 
     .heart::before {
-      top: -50px;
+      top: -50%;
       left: 0;
     }
 
     .heart::after {
-      left: 50px;
+      left: 50%;
       top: 0;
     }
 
@@ -195,15 +201,15 @@
     }
 
     .message {
-      margin-top: 20px;
-      font-size: 20px;
+      margin-top: 3vh;
+      font-size: 4vh;
       color: #b30000;
       line-height: 1.4;
     }
 
     .counter {
-  margin-top: 15px;
-  font-size: 20px;
+  margin-top: 2vh;
+  font-size: 4vh;
   color: #B3FFFF;
   font-weight: bold;
   animation: glowPulse 2s infinite;
